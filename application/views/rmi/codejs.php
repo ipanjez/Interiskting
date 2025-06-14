@@ -1,5 +1,22 @@
+<!-- Load RMI specific styles and scripts -->
+<link href="<?= base_url('assets/css/rmi_style.css'); ?>" rel="stylesheet">
+
 <script type="text/javascript">
   $(document).ready(function() {
+    // Load RMI specific JavaScript
+    $.getScript("<?= base_url('assets/js/rmi_script.js'); ?>");
+    
+    // Initialize Bootstrap tabs properly
+    $('#rmiTabs a').click(function (e) {
+      e.preventDefault();
+      $(this).tab('show');
+    });
+    
+    // Ensure first tab is active on page load
+    $('#rmiTabs a:first').tab('show');
+    
+    // Original DataTable code (commented out for RMI page)
+    /*
     $.fn.dataTableExt.oApi.fnPagingInfo = function(oSettings) {
       return {
         "iStart": oSettings._iDisplayStart,
@@ -50,8 +67,7 @@
           targets: 0,
           checkboxes: {
             selectRow: true,
-          }
-        }
+          }        }
 
       ],
       select: {
@@ -107,6 +123,8 @@
       }
       $(".ajs-header").html("Konfirmasi");
     });
+    */
+    // End of commented DataTable code
   });
 
   function confirmdelete(linkdelete) {

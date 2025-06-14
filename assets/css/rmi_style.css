@@ -1,0 +1,475 @@
+/* RMI Assessment Styles - Modern Card Layout */
+
+/* Apply Inter font to body */
+body {
+    font-family: 'Inter', sans-serif !important;
+    background-color: #f8f9fa;
+}
+
+/* Main Container */
+.rmi-container {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+
+/* Tabs Styling */
+.rmi-tabs {
+    border-bottom: 2px solid #e9ecef;
+}
+
+.rmi-tabs .nav-link {
+    color: #6c757d;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-weight: 500;
+    padding: 15px 25px;
+    transition: all 0.3s ease;
+}
+
+.rmi-tabs .nav-link:hover {
+    border-color: #e3f2fd;
+    color: #495057;
+}
+
+.rmi-tabs .nav-link.active {
+    color: #007bff;
+    border-bottom-color: #007bff;
+    background: none;
+}
+
+.rmi-tab-content {
+    padding: 30px 0;
+}
+
+/* Parameters Container */
+.rmi-parameters-container {
+    max-width: 100%;
+}
+
+/* Parameter Card Styling */
+.rmi-parameter-card {
+    border: 1px solid #e9ecef;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+    background: #fff;
+    overflow: hidden;
+}
+
+.rmi-parameter-card:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.rmi-parameter-card .card-header {
+    background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%);
+    border-bottom: 1px solid #e9ecef;
+    padding: 20px 25px;
+}
+
+.dimensi-breadcrumb {
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d !important;
+}
+
+.parameter-title {
+    font-weight: 600;
+    color: #212529;
+    font-size: 1.1rem;
+    line-height: 1.4;
+    margin-top: 5px;
+}
+
+.parameter-status-badge .badge {
+    font-size: 0.75rem;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.rmi-parameter-card .card-body {
+    padding: 25px;
+}
+
+/* Progress and Score Area */
+.progress-score-area {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 25px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.progress-wrapper {
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.progress {
+    border-radius: 10px;
+    overflow: hidden;
+    height: 10px;
+    background-color: #e9ecef;
+}
+
+.progress-bar {
+    transition: width 0.6s ease;
+    background: linear-gradient(90deg, #28a745 0%, #20c997 100%);
+}
+
+.progress-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.parameter-score-display {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-width: 80px;
+    background: #fff;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.score-label {
+    font-size: 0.7rem;
+    color: #6c757d;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin-bottom: 5px;
+}
+
+.score-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #007bff;
+    line-height: 1;
+}
+
+.score-max {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Phase Accordion Styling */
+.rmi-phases-container {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.rmi-phase-wrapper .card {
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    overflow: hidden;
+}
+
+.rmi-phase-wrapper .card-header {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 1px solid #dee2e6;
+    padding: 0;
+}
+
+.rmi-phase-header.btn-link {
+    color: #495057;
+    text-decoration: none;
+    padding: 15px 20px;
+    border: none;
+    background: none;
+    outline: none;
+    box-shadow: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.rmi-phase-header.btn-link:hover {
+    color: #007bff;
+    background: rgba(0, 123, 255, 0.05);
+    text-decoration: none;
+}
+
+.rmi-phase-header.btn-link:focus {
+    box-shadow: none;
+    outline: none;
+}
+
+.rmi-phase-header.btn-link.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+.rmi-phase-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.phase-number {
+    background: #007bff;
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.phase-name {
+    font-weight: 500;
+    color: #495057;
+}
+
+.phase-check-icon {
+    display: none;
+}
+
+.phase-check-icon i {
+    color: #28a745 !important;
+    font-size: 1.1rem;
+}
+
+/* Toggle icon styling */
+.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.rmi-phase-header.collapsed .toggle-icon {
+    transform: rotate(-90deg);
+}
+
+/* Phase Content */
+.rmi-phase-content {
+    padding: 20px;
+    background: #fff;
+}
+
+.card-body.rmi-phase-content {
+    padding: 20px;
+}
+
+/* Checklist Styling */
+.rmi-checklist-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.rmi-checklist-item {
+    padding: 12px 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border-left: 4px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+
+.rmi-checklist-item:hover {
+    background: #e3f2fd;
+    border-left-color: #007bff;
+    transform: translateX(2px);
+}
+
+.custom-control {
+    position: relative;
+    display: block;
+    min-height: 1.5rem;
+    padding-left: 1.5rem;
+}
+
+.custom-control-input {
+    position: absolute;
+    z-index: -1;
+    opacity: 0;
+}
+
+.custom-control-label {
+    position: relative;
+    margin-bottom: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    color: #495057;
+    cursor: pointer;
+}
+
+.custom-control-label::before {
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    pointer-events: none;
+    content: "";
+    background-color: #fff;
+    border: 2px solid #adb5bd;
+    border-radius: 0.25rem;
+    transition: all 0.2s ease;
+}
+
+.custom-control-input:checked ~ .custom-control-label::before {
+    color: #fff;
+    border-color: #28a745;
+    background-color: #28a745;
+}
+
+.custom-control-label::after {
+    position: absolute;
+    top: 0.25rem;
+    left: -1.5rem;
+    display: block;
+    width: 1rem;
+    height: 1rem;
+    content: "";
+    background: no-repeat 50% / 50% 50%;
+    transition: all 0.2s ease;
+}
+
+.custom-control-input:checked ~ .custom-control-label::after {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 8 8'%3e%3cpath fill='%23fff' d='m6.564.75-3.59 3.612-1.538-1.55L0 4.26 2.974 7.25 8 2.193z'/%3e%3c/svg%3e");
+}
+
+.custom-control-input:checked ~ .custom-control-label {
+    color: #28a745;
+    font-weight: 500;
+}
+
+/* Phase States */
+.rmi-phase-wrapper.completed .card-header {
+    background: linear-gradient(135deg, #e8f5e8 0%, #d4edda 100%);
+    border-color: #28a745;
+}
+
+.rmi-phase-wrapper.completed .phase-number {
+    background: #28a745;
+}
+
+.rmi-phase-wrapper.completed .rmi-phase-header .phase-check-icon {
+    display: inline-block !important;
+}
+
+.rmi-phase-wrapper.completed .rmi-phase-title .phase-name {
+    color: #28a745;
+}
+
+/* Loading States */
+.saving-indicator {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.save-success {
+    background-color: #d4edda !important;
+    border-left-color: #28a745 !important;
+}
+
+/* Badge Variations */
+.badge.badge-phase-0 { background-color: #6c757d; }
+.badge.badge-phase-1 { background-color: #17a2b8; }
+.badge.badge-phase-2 { background-color: #ffc107; color: #212529; }
+.badge.badge-phase-3 { background-color: #fd7e14; }
+.badge.badge-phase-4 { background-color: #28a745; }
+.badge.badge-phase-5 { background-color: #dc3545; }
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .rmi-parameter-card .card-header {
+        padding: 15px 20px;
+    }
+    
+    .rmi-parameter-card .card-body {
+        padding: 20px;
+    }
+    
+    .progress-score-area {
+        flex-direction: column;
+        gap: 15px;
+        align-items: stretch;
+    }
+    
+    .parameter-score-display {
+        flex-direction: row;
+        justify-content: center;
+        gap: 5px;
+        min-width: auto;
+    }
+    
+    .rmi-phase-header {
+        padding: 12px 15px;
+    }
+    
+    .rmi-phase-title {
+        font-size: 0.85rem;
+    }
+    
+    .rmi-checklist-item {
+        padding: 10px 12px;
+    }
+    
+    .custom-control-label {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .rmi-tabs .nav-link {
+        padding: 12px 15px;
+        font-size: 0.9rem;
+    }
+    
+    .parameter-title {
+        font-size: 1rem;
+    }
+    
+    .progress-score-area {
+        padding: 15px;
+    }
+}
+
+/* Animation for smooth transitions */
+.rmi-phase-wrapper .collapse {
+    transition: all 0.3s ease;
+}
+
+.rmi-parameter-card {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Font Awesome Icon Fixes */
+.fas, .fa {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 900 !important;
+}
+
+.far {
+    font-family: "Font Awesome 6 Free" !important;
+    font-weight: 400 !important;
+}
+
+.fab {
+    font-family: "Font Awesome 6 Brands" !important;
+    font-weight: 400 !important;
+}

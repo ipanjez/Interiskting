@@ -15,8 +15,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
   <meta name="description" content="CoreUI - Open Source Bootstrap Admin Template">
   <meta name="author" content="Łukasz Holeczek">
-  <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">
-  <title>Integrated Risk Document & Monitoring</title>
+  <meta name="keyword" content="Bootstrap,Admin,Template,Open,Source,jQuery,CSS,HTML,RWD,Dashboard">  <title>Integrated Risk Document & Monitoring</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- disabled.. embedded on direct page
   <link href="<?= base_url('assets/vendors/fullcalendar/fullcalendar.css'); ?>" rel="stylesheet">
@@ -26,11 +30,12 @@
   <link href="<?php echo base_url('assets/plugins/jquery-nestable/jquery.nestable.css'); ?>" rel="stylesheet">
   <link href="<?= base_url('assets/vendors/bootstrap-datepicker-gijgo/css/gijgo.min.css'); ?>" rel="stylesheet">
   <link href="<?= base_url('assets/vendors/bootstrap-select/css/bootstrap-select.css'); ?>" rel="stylesheet">
-
   <!-- Icons-->
   <link href="<?php echo base_url(); ?>assets/vendors/@coreui/icons/css/coreui-icons.min.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>assets/vendors/flag-icon-css/css/flag-icon.min.css" rel="stylesheet">
   <link href="<?php echo base_url(); ?>assets/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+  <!-- Font Awesome 6 for modern icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link href="<?php echo base_url(); ?>assets/vendors/simple-line-icons/css/simple-line-icons.css" rel="stylesheet">
   <!-- Main styles for this application-->
   <link href="<?php echo base_url(); ?>assets/css/style.css" rel="stylesheet">
