@@ -1,0 +1,62 @@
+# CodeIgniter .gitignore
+
+# Application logs
+/application/logs/*
+!/application/logs/index.html
+
+# Cache files
+/application/cache/*
+!/application/cache/index.html
+
+# Session files
+/application/sessions/*
+!/application/sessions/index.html
+
+# Composer vendor directory
+/vendor/
+/composer.phar
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# User uploads (if sensitive)
+# /uploads/*
+
+# Database files
+*.sql
+
+# Backup files
+*.bak
+*.backup
+
+# Temporary files
+*.tmp
+*.temp
+
+# Node modules (if using frontend build tools)
+node_modules/
+
+# Build files
+/build/
+/dist/
+
+# Error logs
+error_log
+*.log
