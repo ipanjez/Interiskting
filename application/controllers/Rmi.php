@@ -32,7 +32,7 @@ class Rmi extends CI_Controller
 
 
         $data['code_js'] = 'rmi/codejs';
-        $data['page'] = 'rmi/chart';
+        $data['page'] = 'rmi/rmi_view';
         $this->load->view('template/backend', $data);
     }
 
