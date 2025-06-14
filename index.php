@@ -66,7 +66,12 @@ define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'developm
  */
 switch (ENVIRONMENT) {
 	case 'development':
-		error_reporting(-1);
+		// For PHP 8+ compatibility: Hide deprecation warnings for CodeIgniter 3
+		if (version_compare(PHP_VERSION, '8.0', '>=')) {
+			error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
+		} else {
+			error_reporting(-1);
+		}
 		//disable 0, enable 1
 		ini_set('display_errors', 1);
 		break;
