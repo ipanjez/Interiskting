@@ -620,120 +620,237 @@ body {
 .badge.badge-phase-4 { background-color: #28a745; }
 .badge.badge-phase-5 { background-color: #dc3545; }
 
-/* Mobile Responsiveness */
-@media (max-width: 768px) {
-    .rmi-parameter-card .card-header {
-        padding: 15px 20px;
-    }
-    
-    .rmi-parameter-card .card-body {
-        padding: 20px;
-    }
-    
-    .progress-score-area {
-        flex-direction: column;
-        gap: 15px;
-        align-items: stretch;
-    }
-    
-    .parameter-score-display {
-        flex-direction: row;
-        justify-content: center;
-        gap: 5px;
-        min-width: auto;
-    }
-    
-    /* Compact parameter summary responsive styles */
-    .parameter-summary-compact {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: 8px;
-    }
-    
-    .parameter-summary-compact .progress-score-area {
-        flex-direction: row;
-        gap: 10px;
-        padding: 6px 10px;
-        min-width: 0;
-    }
-    
-    .parameter-summary-compact .progress-wrapper {
-        min-width: 100px;
-        max-width: 120px;
-    }
-    
-    .parameter-summary-compact .progress-text {
-        font-size: 0.7rem;
-    }
-    
-    .rmi-phase-header {
-        padding: 12px 15px;
-    }
-    
-    .rmi-phase-title {
-        font-size: 0.85rem;
-    }
-    
-    .rmi-checklist-item {
-        padding: 10px 12px;
-    }
-    
-    .custom-control-label {
-        font-size: 0.85rem;
-    }
+/* Main RMI Score Display Styles */
+.rmi-main-score-container {
+    margin-bottom: 2rem;
 }
 
-@media (max-width: 576px) {
-    .rmi-tabs .nav-link {
-        padding: 12px 15px;
-        font-size: 0.9rem;
-    }
-    
-    .parameter-title {
-        font-size: 1rem;
-    }
-    
-    /* Very small screens - stack everything vertically */
-    .parameter-summary-compact {
-        flex-direction: column;
-        align-items: stretch;
-        gap: 6px;
-    }
-    
-    .parameter-summary-compact .progress-score-area {
-        flex-direction: column;
-        gap: 6px;
-        padding: 4px 8px;
-    }
-    
-    .parameter-summary-compact .progress-wrapper {
-        min-width: auto;
-        max-width: none;
-    }
-    
-    .parameter-summary-compact .parameter-score-display {
-        justify-content: center;
-    }
-    
-    .parameter-summary-compact .score-label {
-        font-size: 0.65rem;
-    }
-    
-    .parameter-summary-compact .score-value {
-        font-size: 0.9rem;
-    }
+.rmi-main-score-card {
+    border: 3px solid #007bff;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.15);
 }
 
-/* Animation for smooth transitions */
-.rmi-phase-wrapper .collapse {
+.rmi-main-score-title {
+    color: #007bff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.rmi-main-score-value {
+    margin-bottom: 1rem;
+}
+
+.rmi-main-score-value .score-number {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #007bff;
+    text-shadow: 0 2px 4px rgba(0, 123, 255, 0.3);
+}
+
+.rmi-score-disclaimer {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+}
+
+/* Performance Aspects Section Styles */
+.rmi-performance-section {
+    margin-top: 3rem;
+}
+
+.rmi-performance-card {
+    border: 2px solid #e9ecef;
+    border-radius: 15px;
+    background: #fff;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.rmi-performance-table {
+    margin-bottom: 0;
+    font-size: 0.9rem;
+}
+
+.rmi-performance-table th {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+    font-weight: 600;
+    color: #495057;
+    text-align: center;
+    vertical-align: middle;
+    padding: 1rem 0.75rem;
+}
+
+.rmi-performance-table td {
+    vertical-align: middle;
+    padding: 1rem 0.75rem;
+    border-color: #dee2e6;
+}
+
+.rmi-performance-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.rmi-performance-table tfoot th {
+    background-color: #e9ecef;
+    font-weight: 700;
+    color: #495057;
+    padding: 1rem 0.75rem;
+}
+
+.performance-aspect-select,
+.performance-conversion,
+.performance-weight,
+.performance-weighted-value {
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+}
+
+.performance-aspect-select:focus,
+.performance-weight:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.performance-conversion,
+.performance-weighted-value {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+.tooltip-trigger {
+    border: none;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
     transition: all 0.3s ease;
 }
 
-.rmi-parameter-card {
-    animation: fadeInUp 0.5s ease-out;
+.tooltip-trigger:hover {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: white;
+    transform: scale(1.1);
 }
 
-@keyframes fadeInUp {
+/* Popover content styling */
+.popover-body .table {
+    font-size: 0.8rem;
+}
+
+.popover-body .table th,
+.popover-body .table td {
+    padding: 0.4rem;
+    border-color: #dee2e6;
+}
+
+/* Total score highlighting - Updated for unified layout */
+#totalPerformanceScore,
+#totalDimensionScore {
+    background-color: #e7f5ff;
+    border: 2px solid #007bff;
+    font-weight: 700;
+    color: #007bff;
+    font-size: 1.1rem;
+    text-align: center;
+}
+
+/* Ensure consistent table footer styling for both totals */
+.rmi-performance-table tfoot tr.table-secondary th {
+    vertical-align: middle;
+    padding: 12px;
+}
+
+/* Ensure consistent input field alignment */
+.rmi-performance-table tfoot th input.form-control {
+    margin-left: auto;
+    margin-right: 0;
+    display: block;
+}
+
+/* Specific alignment for total score cells */
+.rmi-performance-table tfoot tr.table-secondary th:last-child {
+    text-align: right;
+    padding-right: 15px;
+}
+
+/* Use flexbox for better alignment control */
+.rmi-performance-table tfoot tr.table-secondary th:last-child {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+/* Unified Final Summary Container Styles */
+.rmi-final-summary-container {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 15px;
+    margin: 2rem 0;
+    border: 1px solid #e9ecef;
+}
+
+.rmi-final-summary-container .card {
+    border: 2px solid #007bff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 123, 255, 0.1);
+    transition: all 0.3s ease;
+}
+
+.rmi-final-summary-container .card:hover {
+    box-shadow: 0 6px 12px rgba(0, 123, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+.rmi-final-summary-container .card-body {
+    padding: 1.5rem;
+}
+
+.rmi-final-summary-container h5 {
+    color: #495057;
+    font-size: 1.1rem;
+}
+
+.rmi-final-summary-container input.form-control {
+    background-color: #e7f5ff;
+    border: 2px solid #007bff;
+    font-weight: 700;
+    color: #007bff;
+    font-size: 1.1rem;
+}
+
+/* Responsive adjustments for unified summary */
+@media (max-width: 768px) {
+    .rmi-final-summary-container .card-body {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .rmi-final-summary-container h5 {
+        margin-bottom: 1rem;
+    }
+    
+    .rmi-final-summary-container input.form-control {
+        max-width: 100% !important;
+    }
+}
+
+/* Animation for conditional score visibility */
+.score-fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+.score-fade-out {
+    animation: fadeOut 0.3s ease;
+}
+
+@keyframes fadeIn {
     from {
         opacity: 0;
         transform: translateY(20px);
@@ -744,51 +861,173 @@ body {
     }
 }
 
-/* Font Awesome Icon Fixes */
-.fas, .fa {
-    font-family: "Font Awesome 6 Free" !important;
-    font-weight: 900 !important;
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
 }
 
-.far {
-    font-family: "Font Awesome 6 Free" !important;
-    font-weight: 400 !important;
+/* Enhanced notification styles */
+.notification-success {
+    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+    border-left-color: #28a745;
+    color: #155724;
 }
 
-.fab {
-    font-family: "Font Awesome 6 Brands" !important;
-    font-weight: 400 !important;
+.notification-error {
+    background: linear-gradient(135deg, #f8d7da 0%, #f1b0b7 100%);
+    border-left-color: #dc3545;
+    color: #721c24;
 }
 
-/* Toast Notification System */
+/* Loading states for AJAX operations */
+.saving-state {
+    position: relative;
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.saving-state::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Print styles for reports */
+@media print {
+    .rmi-main-score-container,
+    .rmi-dimension-total-container,
+    .rmi-performance-section {
+        page-break-inside: avoid;
+        margin-bottom: 1rem;
+    }
+    
+    .tooltip-trigger {
+        display: none;
+    }
+    
+    .rmi-main-score-card,
+    .rmi-dimension-total-card,
+    .rmi-performance_card {
+        box-shadow: none;
+        border: 1px solid #ccc;
+    }
+}
+
+/* Tooltip Icon Styling */
+.tooltip-icon {
+    color: #007bff;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    cursor: help !important;
+}
+
+.tooltip-icon:hover {
+    color: #0056b3;
+    transform: scale(1.1);
+}
+
+/* Make tooltip icons more visible in score displays */
+.rmi-main-score-value .tooltip-icon {
+    font-size: 18px;
+    margin-left: 10px;
+}
+
+.summary-item .tooltip-icon {
+    font-size: 14px;
+    margin-left: 6px;
+}
+
+/* Ensure tooltip icons work well in table cells */
+th .tooltip-icon {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Phase Locking Styles */
+/* Style for a locked phase block */
+.phase-locked {
+    opacity: 0.6;
+    background-color: #f8f9fa; /* A subtle grey background */
+    transition: opacity 0.3s ease;
+}
+
+/* The browser's default disabled style is usually sufficient, 
+   but this ensures the cursor indicates a non-interactive element. */
+.phase-locked .rmi-phase-content {
+    cursor: not-allowed;
+}
+
+.phase-locked .card-body {
+    background-color: #f8f9fa;
+}
+
+/* Additional styling for locked phase headers */
+.phase-locked .rmi-phase-header {
+    opacity: 0.7;
+    color: #6c757d !important;
+}
+
+/* Styling for disabled checkboxes in locked phases */
+.phase-locked input[type="checkbox"]:disabled {
+    cursor: not-allowed;
+}
+
+.phase-locked .custom-control-label {
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+/* Toast Notification Styles */
 .toast-container {
     position: fixed;
-    bottom: 20px;
+    top: 20px;
     right: 20px;
-    z-index: 1050;
+    z-index: 9999;
     max-width: 350px;
+    width: 100%;
 }
 
 .toast-message {
-    background: #fff;
+    background: white;
     border-radius: 8px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     margin-bottom: 10px;
-    padding: 16px 20px;
-    border-left: 4px solid #007bff;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 12px;
-    min-width: 280px;
     opacity: 0;
     transform: translateX(100%);
     transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    border-left: 4px solid #007bff;
 }
 
 .toast-message.show {
     opacity: 1;
     transform: translateX(0);
+}
+
+.toast-message.removing {
+    opacity: 0;
+    transform: translateX(100%);
 }
 
 .toast-message.success {
@@ -808,74 +1047,20 @@ body {
 }
 
 .toast-content {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
+    padding: 16px 40px 16px 16px;
 }
 
 .toast-title {
     font-weight: 600;
-    font-size: 0.9rem;
-    color: #212529;
-    margin: 0;
-}
-
-.toast-body {
-    font-size: 0.85rem;
-    color: #6c757d;
-    line-height: 1.4;
-    margin: 0;
-}
-
-.toast-close {
-    background: none;
-    border: none;
-    font-size: 1.1rem;
-    color: #6c757d;
-    cursor: pointer;
-    padding: 0;
-    width: 20px;
-    height: 20px;
+    font-size: 14px;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: color 0.2s ease;
-    line-height: 1;
-    margin-top: -2px;
 }
 
-.toast-close:hover {
-    color: #495057;
-}
-
-.toast-close:focus {
-    outline: none;
-    color: #495057;
-}
-
-.toast-message.success .toast-title {
-    color: #28a745;
-}
-
-.toast-message.error .toast-title {
-    color: #dc3545;
-}
-
-.toast-message.warning .toast-title {
-    color: #ffc107;
-}
-
-.toast-message.info .toast-title {
-    color: #17a2b8;
-}
-
-/* Toast icons */
 .toast-icon {
     margin-right: 8px;
-    font-size: 1rem;
-    flex-shrink: 0;
-    margin-top: 2px;
+    font-size: 16px;
 }
 
 .toast-message.success .toast-icon {
@@ -894,82 +1079,407 @@ body {
     color: #17a2b8;
 }
 
-/* Responsive toast */
-@media (max-width: 768px) {
-    .toast-container {
-        left: 20px;
-        right: 20px;
-        bottom: 20px;
-        max-width: none;
-    }
-    
-    .toast-message {
-        min-width: auto;
-        width: 100%;
-    }
+.toast-body {
+    font-size: 13px;
+    color: #666;
+    line-height: 1.4;
 }
 
-/* Animation for toast removal */
-.toast-message.removing {
-    opacity: 0;
-    transform: translateX(100%);
-}
-
-/* Phase Check All/Uncheck All Styles */
-.phase-check-all-container {
-    display: flex;
-    align-items: center;
-    padding: 0 8px;
-    border-radius: 4px;
-    background-color: rgba(0, 123, 255, 0.05);
-    border: 1px solid rgba(0, 123, 255, 0.2);
-    transition: all 0.2s ease;
-}
-
-.phase-check-all-container:hover {
-    background-color: rgba(0, 123, 255, 0.1);
-    border-color: rgba(0, 123, 255, 0.3);
-}
-
-.phase-check-all {
-    margin: 0;
+.toast-close {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #999;
     cursor: pointer;
-    transform: scale(1.1);
-}
-
-.phase-check-all:focus {
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-.phase-check-all-container label {
-    cursor: pointer;
-    font-size: 11px;
-    color: #6c757d;
-    user-select: none;
+    padding: 4px;
+    line-height: 1;
     transition: color 0.2s ease;
 }
 
-.phase-check-all-container:hover label {
-    color: #495057;
+.toast-close:hover {
+    color: #666;
 }
 
-/* Indeterminate state styling */
-.phase-check-all:indeterminate {
-    background-color: #007bff;
+.toast-close:focus {
+    outline: none;
+}
+
+/* Hierarchical Check All Button Styles */
+.hierarchical-check-all-btn {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 0 8px;
+    min-width: 28px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hierarchical-check-all-btn:hover {
+    background: #007bff;
+    color: #ffffff;
     border-color: #007bff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
 }
 
-/* Responsive adjustments for phase check all */
+.hierarchical-check-all-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 4px rgba(0, 123, 255, 0.2);
+}
+
+.hierarchical-check-all-btn.all-checked {
+    background: #28a745;
+    color: #ffffff;
+    border-color: #28a745;
+}
+
+.hierarchical-check-all-btn.all-checked:hover {
+    background: #dc3545;
+    border-color: #dc3545;
+}
+
+.hierarchical-check-all-btn.all-checked i::before {
+    content: "\f00d"; /* fa-times */
+}
+
+/* Position adjustments for different levels */
+.dimension-check-all {
+    font-size: 14px;
+    padding: 6px 10px;
+    min-width: 32px;
+    height: 28px;
+}
+
+.subdimension-check-all {
+    font-size: 13px;
+    padding: 5px 9px;
+    min-width: 30px;
+    height: 26px;
+}
+
+.parameter-check-all {
+    font-size: 11px;
+    padding: 3px 6px;
+    min-width: 24px;
+    height: 20px;
+    margin: 0 4px;
+}
+
+/* Area of Improvement Button Styles */
+.improvement-btn {
+    margin: 0 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 4px;
+    min-width: 28px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.improvement-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.improvement-btn i {    font-size: 11px;
+}
+
+/* Refined styles for a more compact and responsive improvement modal */
+#improvementModal .modal-dialog {
+    max-width: 800px; /* Sets a comfortable medium-large width */
+}
+
+#improvementModal .modal-content {
+    /* Constrain the entire modal's height, including header and footer */
+    max-height: 85vh; 
+    display: flex;
+    flex-direction: column;
+}
+
+#improvementModal .modal-body {
+    /* This makes ONLY the body scrollable if the content is long */
+    overflow-y: auto;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 2rem;
+}
+
+#improvementModal .list-group-item {
+    border-left: none;
+    border-right: none;
+    padding: 8px 0;
+}
+
+#improvementModal .list-group-item:first-child {
+    border-top: none;
+}
+
+#improvementModal .list-group-item:last-child {
+    border-bottom: none;
+}
+
+/* Dynamic modal header theming */
+#improvementModalHeader {
+    transition: background-color 0.3s ease, color 0.3s ease;
+    padding: 1.5rem 2rem;
+}
+
+#improvementModal .modal-footer {
+    padding: 1rem 2rem 1.5rem;
+}
+
+/* Enhanced card styling for parameters */
+#improvementModal .card {
+    border: 1px solid #e3e6f0;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    margin-bottom: 2rem;
+}
+
+#improvementModal .border-left-primary {
+    border-left: 4px solid #007bff !important;
+}
+
+#improvementModal .border-left-info {
+    border-left: 4px solid #36b9cc !important;
+}
+
+#improvementModal .card-header {
+    background-color: #f8f9fc !important;
+    border-bottom: 1px solid #e3e6f0;
+    padding: 1.25rem 1.5rem;
+}
+
+#improvementModal .bg-light {
+    background-color: #f8f9fa !important;
+}
+
+#improvementModal .text-primary {
+    color: #007bff !important;
+}
+
+#improvementModal .text-secondary {
+    color: #5a5c69 !important;
+}
+
+#improvementModal .text-info {
+    color: #36b9cc !important;
+}
+
+/* Phase section styling */
+#improvementModal .list-unstyled li {
+    line-height: 1.6;
+    margin-bottom: 10px;
+    padding-left: 0;
+    font-size: 14px;
+}
+
+#improvementModal .list-unstyled li:last-child {
+    margin-bottom: 0;
+}
+
+/* Improved typography for better readability */
+#improvementModal h6 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+#improvementModal .card-body {
+    padding: 2rem;
+}
+
+#improvementModal .alert {
+    font-size: 15px;
+    padding: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+#improvementModal .badge {
+    font-size: 13px;
+    padding: 8px 15px;
+}
+
+/* Dashed separator styling */
+#improvementModal hr {
+    margin: 1.5rem 0;
+    border: 0;
+    border-top: 2px dashed #dee2e6;
+}
+
+/* Icon styling */
+#improvementModal .fas.fa-circle {
+    opacity: 0.6;
+}
+
+#improvementModal .fas.fa-arrow-right {
+    font-size: 14px;
+}
+
+#improvementModal .fas.fa-lightbulb {
+    font-size: 20px;
+}
+
+/* Better spacing for phase headers */
+#improvementModal .text-secondary.mb-2 {
+    margin-bottom: 15px !important;
+    font-size: 16px;
+}
+
+#improvementModal .pl-4 {
+    padding-left: 2rem !important;
+}
+
+/* Responsive improvements for larger modal */
+@media (max-width: 1400px) {
+    .improvement-modal-custom {
+        max-width: 90vw;
+        width: 90vw;
+    }
+}
+
+@media (max-width: 1200px) {
+    .improvement-modal-custom {
+        max-width: 85vw;
+        width: 85vw;
+    }
+    
+    #improvementModal .modal-body {
+        font-size: 13px;
+        padding: 1.5rem;
+    }
+    
+    #improvementModal .card-body {
+        padding: 1.5rem;
+    }
+}
+
 @media (max-width: 768px) {
-    .phase-check-all-container {
-        padding: 0 6px;
+    .improvement-modal-custom {
+        max-width: 95vw;
+        width: 95vw;
+        margin: 1rem auto;
     }
     
-    .phase-check-all-container label {
-        font-size: 10px;
+    .improvement-modal-custom .modal-content {
+        height: 95vh;
+        max-height: 95vh;
     }
     
-    .phase-check-all {
-        transform: scale(1.0);
+    #improvementModal .modal-body {
+        font-size: 12px;
+        padding: 1rem;
+        max-height: calc(95vh - 100px);
+    }
+    
+    #improvementModal .border-left-primary,
+    #improvementModal .border-left-info {
+        border-left: 3px solid #007bff !important;
+    }
+    
+    #improvementModal .card-body {
+        padding: 1rem;
+    }
+    
+    #improvementModal h6 {
+        font-size: 15px;
+    }
+    
+    #improvementModal .modal-header,
+    #improvementModal .modal-footer {
+        padding: 1rem;
+    }
+}
+
+/* RMI Score Popover Styling */
+.rmi-popover-content {
+    max-width: 450px;
+    font-size: 13px;
+}
+
+.rmi-popover-content h6 {
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+.rmi-popover-content .table {
+    margin-bottom: 15px;
+}
+
+.rmi-popover-content .table th,
+.rmi-popover-content .table td {
+    padding: 6px 8px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.rmi-popover-content .table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+.rmi-popover-content .list-unstyled li {
+    margin-bottom: 5px;
+    line-height: 1.4;
+}
+
+.rmi-popover-content .small {
+    font-size: 12px;
+    line-height: 1.3;
+}
+
+/* Popover header dynamic styling */
+.popover-header.bg-primary {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.popover-header.bg-info {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.popover-header.bg-warning {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.popover-header.bg-secondary {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Info icon styling */
+#rmiScoreInfoIcon {
+    color: #6c757d;
+    font-size: 16px;
+    transition: color 0.2s ease;
+}
+
+#rmiScoreInfoIcon:hover {
+    color: #007bff;
+}
+
+/* Responsive popover */
+@media (max-width: 768px) {
+    .rmi-popover-content {
+        max-width: 300px;
+        font-size: 12px;
+    }
+    
+    .rmi-popover-content .table th,
+    .rmi-popover-content .table td {
+        padding: 4px 6px;
+        font-size: 11px;
     }
 }

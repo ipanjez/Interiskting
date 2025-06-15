@@ -589,20 +589,20 @@ class Rmi extends CI_Controller
     {
         $dimension_summaries = [];
         
-        foreach ($structured_data as $dimensi => $sub_dimensi_array) {
-            $dimension_summaries[$dimensi] = [
+        foreach ($structured_data as $dimensi => $sub_dimensi_array) {            $dimension_summaries[$dimensi] = [
                 'name' => $dimensi,
                 'total_parameters' => 0,
                 'total_points' => 0,
-                'sub_dimensions' => []
+                'sub_dimensions' => [],
+                'parameter_numbers' => []  // Add this for dimension-level parameter numbers
             ];
             
-            foreach ($sub_dimensi_array as $sub_dimensi => $parameters) {
-                $sub_dimension_data = [
+            foreach ($sub_dimensi_array as $sub_dimensi => $parameters) {                $sub_dimension_data = [
                     'name' => $sub_dimensi,
                     'parameter_count' => count($parameters),
                     'total_points' => 0,
-                    'parameter_range' => []
+                    'parameter_range' => [],
+                    'parameter_numbers' => []  // Add this for the number range
                 ];
                 
                 foreach ($parameters as $param_data) {
@@ -611,11 +611,25 @@ class Rmi extends CI_Controller
                     
                     $sub_dimension_data['total_points'] += $param_points;
                     $sub_dimension_data['parameter_range'][] = $param_data['parameter'];
+                    
+                    // Extract parameter number from parameter text
+                    if (preg_match('/^\s*(\d+(?:\.\d+)?)\s*\.?\s*/', $param_data['parameter'], $matches)) {
+                        $param_number = floatval($matches[1]);
+                        if (!in_array($param_number, $sub_dimension_data['parameter_numbers'])) {
+                            $sub_dimension_data['parameter_numbers'][] = $param_number;
+                        }
+                    }
                 }
-                
-                $dimension_summaries[$dimensi]['sub_dimensions'][$sub_dimensi] = $sub_dimension_data;
+                  $dimension_summaries[$dimensi]['sub_dimensions'][$sub_dimensi] = $sub_dimension_data;
                 $dimension_summaries[$dimensi]['total_parameters'] += $sub_dimension_data['parameter_count'];
                 $dimension_summaries[$dimensi]['total_points'] += $sub_dimension_data['total_points'];
+                
+                // Add sub-dimension parameter numbers to dimension-level collection
+                foreach ($sub_dimension_data['parameter_numbers'] as $param_num) {
+                    if (!in_array($param_num, $dimension_summaries[$dimensi]['parameter_numbers'])) {
+                        $dimension_summaries[$dimensi]['parameter_numbers'][] = $param_num;
+                    }
+                }
             }
         }
         
@@ -683,6 +697,71 @@ class Rmi extends CI_Controller
         
         $this->output->set_output(json_encode($debug_info, JSON_PRETTY_PRINT));
     }
+    
+    /**
+     * Save performance aspects data via AJAX
+     */
+    public function save_performance_aspects()
+    {
+        // Set response headers
+        $this->output->set_content_type('application/json');
+        
+        try {
+            // Get POST data
+            $final_rating = $this->input->post('final_rating');
+            $risk_rating = $this->input->post('risk_rating');
+            $final_rating_weight = $this->input->post('final_rating_weight');
+            $risk_rating_weight = $this->input->post('risk_rating_weight');
+            
+            // Get current user ID
+            $user_id = $this->ion_auth->get_user_id();
+            if (!$user_id) {
+                throw new Exception('User not authenticated');
+            }
+            
+            // Prepare data for storage
+            $save_data = [
+                'final_rating' => $final_rating,
+                'risk_rating' => $risk_rating,
+                'final_rating_weight' => $final_rating_weight,
+                'risk_rating_weight' => $risk_rating_weight,
+                'user_id' => $user_id,
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            
+            // Check if record exists for this user
+            $this->db->where('user_id', $user_id);
+            $existing = $this->db->get('rmi_performance_aspects')->row();
+            
+            if ($existing) {
+                // Update existing record
+                $this->db->where('user_id', $user_id);
+                $result = $this->db->update('rmi_performance_aspects', $save_data);
+            } else {
+                // Insert new record
+                $save_data['created_at'] = date('Y-m-d H:i:s');
+                $result = $this->db->insert('rmi_performance_aspects', $save_data);
+            }
+            
+            if ($result) {
+                $response = [
+                    'status' => 'success',
+                    'message' => 'Performance aspects saved successfully'
+                ];
+            } else {
+                throw new Exception('Database operation failed: ' . print_r($this->db->error(), true));
+            }
+            
+        } catch (Exception $e) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Error saving performance aspects: ' . $e->getMessage()
+            ];
+            error_log("RMI Performance Aspects Save Error: " . $e->getMessage());
+        }
+        
+        $this->output->set_output(json_encode($response));
+    }
 }
 
-/* End of file Grafik.php */
+/* End of file Rmi.php */

@@ -1,0 +1,23 @@
+# Protect evidence uploads directory
+# Allow only specific file types to be accessed directly
+
+<Files ~ "\.(php|php3|php4|php5|phtml|pl|py|jsp|asp|sh|cgi)$">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Prevent access to sensitive files
+<Files ~ "^\.">
+    Order Allow,Deny  
+    Deny from all
+</Files>
+
+# Optional: Disable directory browsing
+Options -Indexes
+
+# Set proper MIME types for evidence files
+AddType application/pdf .pdf
+AddType application/msword .doc
+AddType application/vnd.openxmlformats-officedocument.wordprocessingml.document .docx
+AddType application/vnd.ms-excel .xls
+AddType application/vnd.openxmlformats-officedocument.spreadsheetml.sheet .xlsx
