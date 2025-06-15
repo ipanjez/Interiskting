@@ -35,8 +35,13 @@ class Rmi extends CI_Controller
         // Populate parameters table for better performance
         $this->populate_parameters_table($rmi_data['structured_data'], $rmi_data['total_points']);
         
+        // Calculate dimension and sub-dimension summaries
+        $dimension_summaries = $this->calculate_dimension_summaries($rmi_data['structured_data'], $rmi_data['total_points']);
+        
         $data['rmi_data'] = $rmi_data['structured_data'];
-        $data['total_points'] = $rmi_data['total_points'];        $data['code_js'] = 'rmi/codejs';
+        $data['total_points'] = $rmi_data['total_points'];
+        $data['dimension_summaries'] = $dimension_summaries;
+        $data['code_js'] = 'rmi/codejs';
         $data['page'] = 'rmi/rmi_view';
         
         error_log("RMI Controller: Loading template/backend view");
@@ -107,9 +112,7 @@ class Rmi extends CI_Controller
         
         // Return empty JSON for now, or implement RMI-specific JSON data if needed
         echo json_encode(['status' => 'success', 'message' => 'RMI JSON endpoint']);
-    }
-
-    public function save_point_progress()
+    }    public function save_point_progress()
     {
         // Set JSON header
         $this->output->set_content_type('application/json');
@@ -129,12 +132,31 @@ class Rmi extends CI_Controller
         
         // Validate required fields
         if (empty($parameter_key) || empty($phase_level) || empty($point_identifier)) {
-            $this->output->set_output(json_encode(['status' => 'error', 'message' => 'Missing required fields']));
+            $this->output->set_output(json_encode([
+                'status' => 'error', 
+                'message' => 'Missing required fields',
+                'debug' => [
+                    'parameter_key' => $parameter_key,
+                    'phase_level' => $phase_level,
+                    'point_identifier' => $point_identifier
+                ]
+            ]));
             return;
         }
 
-        // Get current user ID (assuming ion_auth is being used)
-        $user_id = $this->ion_auth->user()->row()->id;
+        // Get current user ID (try ion_auth, fallback to session or default)
+        $user_id = 1; // Default fallback
+        try {
+            if ($this->ion_auth && $this->ion_auth->logged_in()) {
+                $user = $this->ion_auth->user()->row();
+                if ($user) {
+                    $user_id = $user->id;
+                }
+            }
+        } catch (Exception $e) {
+            // Continue with default user_id if ion_auth fails
+            error_log('Ion Auth error in save_point_progress: ' . $e->getMessage());
+        }
 
         // Prepare data for database
         $data = [
@@ -148,14 +170,18 @@ class Rmi extends CI_Controller
             'updated_at' => date('Y-m-d H:i:s')
         ];
 
-        // Check if record exists
-        $existing = $this->db->get_where('rmi_point_progress', [
-            'parameter_key' => $parameter_key,
-            'phase_level' => $phase_level,
-            'point_identifier' => $point_identifier
-        ])->row();
-
         try {
+            // First, ensure the tables exist by trying to create them if they don't exist
+            $this->ensure_rmi_tables_exist();
+            
+            // Check if record exists with proper error handling
+            $this->db->where([
+                'parameter_key' => $parameter_key,
+                'phase_level' => $phase_level,
+                'point_identifier' => $point_identifier
+            ]);
+            $existing = $this->db->get('rmi_point_progress')->row();
+
             if ($existing) {
                 // Update existing record
                 $this->db->where([
@@ -164,10 +190,17 @@ class Rmi extends CI_Controller
                     'point_identifier' => $point_identifier
                 ]);
                 $result = $this->db->update('rmi_point_progress', $data);
+                $operation = 'update';
             } else {
                 // Insert new record
                 $data['created_at'] = date('Y-m-d H:i:s');
                 $result = $this->db->insert('rmi_point_progress', $data);
+                $operation = 'insert';
+            }
+
+            // Check for database errors
+            if ($this->db->error()['code'] !== 0) {
+                throw new Exception('Database error: ' . $this->db->error()['message']);
             }
 
             if ($result) {
@@ -177,13 +210,82 @@ class Rmi extends CI_Controller
                 $this->output->set_output(json_encode([
                     'status' => 'success',
                     'message' => 'Progress saved successfully',
+                    'operation' => $operation,
                     'progress' => $progress
                 ]));
             } else {
-                $this->output->set_output(json_encode(['status' => 'error', 'message' => 'Failed to save progress']));
+                $this->output->set_output(json_encode([
+                    'status' => 'error', 
+                    'message' => 'Failed to save progress - no rows affected',
+                    'debug' => [
+                        'operation' => $operation ?? 'unknown',
+                        'db_error' => $this->db->error()
+                    ]
+                ]));
             }
         } catch (Exception $e) {
-            $this->output->set_output(json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]));
+            error_log('RMI save_point_progress error: ' . $e->getMessage());
+            $this->output->set_output(json_encode([
+                'status' => 'error', 
+                'message' => 'Database error: ' . $e->getMessage(),
+                'debug' => [
+                    'file' => $e->getFile(),
+                    'line' => $e->getLine(),
+                    'trace' => $e->getTraceAsString()
+                ]
+            ]));
+        }
+    }
+    
+    /**
+     * Ensure RMI tables exist in database
+     */
+    private function ensure_rmi_tables_exist()
+    {
+        // Check if rmi_point_progress table exists
+        if (!$this->db->table_exists('rmi_point_progress')) {
+            // Create the table
+            $sql = "CREATE TABLE IF NOT EXISTS `rmi_point_progress` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `parameter_key` varchar(255) NOT NULL,
+                `phase_level` tinyint(4) NOT NULL,
+                `point_identifier` varchar(255) NOT NULL,
+                `point_text` text NOT NULL,
+                `is_completed` tinyint(1) NOT NULL DEFAULT 0,
+                `completed_by` int(11) DEFAULT NULL,
+                `completed_at` timestamp NULL DEFAULT NULL,
+                `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `unique_point_progress` (`parameter_key`, `phase_level`, `point_identifier`),
+                KEY `idx_parameter_key` (`parameter_key`),
+                KEY `idx_phase_level` (`phase_level`),
+                KEY `idx_is_completed` (`is_completed`),
+                KEY `idx_completed_by` (`completed_by`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            
+            $this->db->query($sql);
+        }
+        
+        // Check if rmi_parameters table exists
+        if (!$this->db->table_exists('rmi_parameters')) {
+            $sql = "CREATE TABLE IF NOT EXISTS `rmi_parameters` (
+                `id` int(11) NOT NULL AUTO_INCREMENT,
+                `parameter_key` varchar(255) NOT NULL,
+                `dimensi` varchar(255) NOT NULL,
+                `sub_dimensi` varchar(255) NOT NULL,
+                `parameter` text NOT NULL,
+                `total_points` int(11) NOT NULL DEFAULT 0,
+                `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `unique_parameter_key` (`parameter_key`),
+                KEY `idx_dimensi` (`dimensi`),
+                KEY `idx_sub_dimensi` (`sub_dimensi`),
+                KEY `idx_dimensi_sub` (`dimensi`, `sub_dimensi`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci";
+            
+            $this->db->query($sql);
         }
     }
 
@@ -223,22 +325,182 @@ class Rmi extends CI_Controller
         // Set JSON header
         $this->output->set_content_type('application/json');
         
-        // Get all saved progress
-        $progress_data = $this->db->select('parameter_key, phase_level, point_identifier, is_completed')
-            ->where('is_completed', 1)
-            ->get('rmi_point_progress')
-            ->result_array();
-
-        $formatted_progress = [];
-        foreach ($progress_data as $item) {
-            $key = $item['parameter_key'] . '_' . $item['phase_level'] . '_' . $item['point_identifier'];
-            $formatted_progress[$key] = true;
+        // Validate AJAX request
+        if (!$this->input->is_ajax_request()) {
+            $this->output->set_output(json_encode(['status' => 'error', 'message' => 'Invalid request']));
+            return;
         }
 
+        try {
+            // Get all completed progress records
+            $progress_data = $this->db->select('parameter_key, phase_level, point_identifier, point_text, is_completed')
+                ->where('is_completed', 1)
+                ->get('rmi_point_progress')
+                ->result_array();
+
+            $this->output->set_output(json_encode([
+                'status' => 'success',
+                'data' => $progress_data
+            ]));
+        } catch (Exception $e) {
+            $this->output->set_output(json_encode([
+                'status' => 'error', 
+                'message' => 'Database error: ' . $e->getMessage()
+            ]));
+        }
+    }
+
+    public function get_dimension_progress()
+    {
+        // Set JSON header
+        $this->output->set_content_type('application/json');
+        
+        $dimension_name = $this->input->get('dimension');
+        
+        if (empty($dimension_name)) {
+            $this->output->set_output(json_encode(['status' => 'error', 'message' => 'Dimension name required']));
+            return;
+        }
+        
+        // Get all parameters for this dimension
+        $parameters = $this->db->select('parameter_key, total_points')
+            ->where('dimensi', $dimension_name)
+            ->get('rmi_parameters')
+            ->result_array();
+        
+        $total_points = 0;
+        $completed_points = 0;
+        $total_parameters = count($parameters);
+        $parameter_scores = [];
+        $sub_dimensions = [];
+        
+        // Get unique sub-dimensions
+        $sub_dim_query = $this->db->select('DISTINCT sub_dimensi')
+            ->where('dimensi', $dimension_name)
+            ->get('rmi_parameters')
+            ->result_array();
+            
+        foreach ($sub_dim_query as $row) {
+            $sub_dimensions[] = $row['sub_dimensi'];
+        }
+        
+        foreach ($parameters as $param) {
+            $total_points += $param['total_points'];
+            
+            // Get completed points for this parameter
+            $completed = $this->db->where([
+                'parameter_key' => $param['parameter_key'],
+                'is_completed' => 1
+            ])->count_all_results('rmi_point_progress');
+            
+            $completed_points += $completed;
+            
+            // Calculate parameter score
+            $parameter_scores[] = $this->calculate_parameter_score_from_db($param['parameter_key']);
+        }
+        
+        $progress_percentage = $total_points > 0 ? round(($completed_points / $total_points) * 100, 2) : 0;
+        $average_score = count($parameter_scores) > 0 ? round(array_sum($parameter_scores) / count($parameter_scores), 2) : 0;
+        
         $this->output->set_output(json_encode([
             'status' => 'success',
-            'progress' => $formatted_progress
+            'dimension' => $dimension_name,
+            'total_parameters' => $total_parameters,
+            'total_sub_dimensions' => count($sub_dimensions),
+            'sub_dimensions' => $sub_dimensions,
+            'total_points' => $total_points,
+            'completed_points' => $completed_points,
+            'progress_percentage' => $progress_percentage,
+            'average_score' => $average_score
         ]));
+    }
+    
+    public function get_subdimension_progress()
+    {
+        // Set JSON header
+        $this->output->set_content_type('application/json');
+        
+        $dimension_name = $this->input->get('dimension');
+        $subdimension_name = $this->input->get('subdimension');
+        
+        if (empty($dimension_name) || empty($subdimension_name)) {
+            $this->output->set_output(json_encode(['status' => 'error', 'message' => 'Dimension and sub-dimension names required']));
+            return;
+        }
+        
+        // Get all parameters for this sub-dimension
+        $parameters = $this->db->select('parameter_key, total_points')
+            ->where('dimensi', $dimension_name)
+            ->where('sub_dimensi', $subdimension_name)
+            ->get('rmi_parameters')
+            ->result_array();
+        
+        $total_points = 0;
+        $completed_points = 0;
+        $total_parameters = count($parameters);
+        $parameter_scores = [];
+        
+        foreach ($parameters as $param) {
+            $total_points += $param['total_points'];
+            
+            // Get completed points for this parameter
+            $completed = $this->db->where([
+                'parameter_key' => $param['parameter_key'],
+                'is_completed' => 1
+            ])->count_all_results('rmi_point_progress');
+            
+            $completed_points += $completed;
+            
+            // Calculate parameter score
+            $parameter_scores[] = $this->calculate_parameter_score_from_db($param['parameter_key']);
+        }
+        
+        $progress_percentage = $total_points > 0 ? round(($completed_points / $total_points) * 100, 2) : 0;
+        $average_score = count($parameter_scores) > 0 ? round(array_sum($parameter_scores) / count($parameter_scores), 2) : 0;
+        
+        $this->output->set_output(json_encode([
+            'status' => 'success',
+            'dimension' => $dimension_name,
+            'subdimension' => $subdimension_name,
+            'total_parameters' => $total_parameters,
+            'total_points' => $total_points,
+            'completed_points' => $completed_points,
+            'progress_percentage' => $progress_percentage,
+            'average_score' => $average_score
+        ]));
+    }
+    
+    private function calculate_parameter_score_from_db($parameter_key)
+    {
+        // Get all phase completion status for this parameter
+        $phases_completion = [];
+        
+        for ($phase = 1; $phase <= 5; $phase++) {
+            $total_in_phase = $this->db->where([
+                'parameter_key' => $parameter_key,
+                'phase_level' => $phase
+            ])->count_all_results('rmi_point_progress');
+            
+            $completed_in_phase = $this->db->where([
+                'parameter_key' => $parameter_key,
+                'phase_level' => $phase,
+                'is_completed' => 1
+            ])->count_all_results('rmi_point_progress');
+            
+            $phases_completion[$phase] = ($total_in_phase > 0 && $completed_in_phase == $total_in_phase);
+        }
+        
+        // Calculate score - highest completed phase
+        $score = 0;
+        for ($phase = 1; $phase <= 5; $phase++) {
+            if ($phases_completion[$phase]) {
+                $score = $phase;
+            } else {
+                break; // Stop at first incomplete phase
+            }
+        }
+        
+        return $score;
     }
 
     private function get_phase_name($phase_number)
@@ -321,6 +583,105 @@ class Rmi extends CI_Controller
                 }
             }
         }
+    }
+
+    private function calculate_dimension_summaries($structured_data, $total_points)
+    {
+        $dimension_summaries = [];
+        
+        foreach ($structured_data as $dimensi => $sub_dimensi_array) {
+            $dimension_summaries[$dimensi] = [
+                'name' => $dimensi,
+                'total_parameters' => 0,
+                'total_points' => 0,
+                'sub_dimensions' => []
+            ];
+            
+            foreach ($sub_dimensi_array as $sub_dimensi => $parameters) {
+                $sub_dimension_data = [
+                    'name' => $sub_dimensi,
+                    'parameter_count' => count($parameters),
+                    'total_points' => 0,
+                    'parameter_range' => []
+                ];
+                
+                foreach ($parameters as $param_data) {
+                    $parameter_key = md5($dimensi . $sub_dimensi . $param_data['parameter']);
+                    $param_points = isset($total_points[$parameter_key]) ? $total_points[$parameter_key] : 0;
+                    
+                    $sub_dimension_data['total_points'] += $param_points;
+                    $sub_dimension_data['parameter_range'][] = $param_data['parameter'];
+                }
+                
+                $dimension_summaries[$dimensi]['sub_dimensions'][$sub_dimensi] = $sub_dimension_data;
+                $dimension_summaries[$dimensi]['total_parameters'] += $sub_dimension_data['parameter_count'];
+                $dimension_summaries[$dimensi]['total_points'] += $sub_dimension_data['total_points'];
+            }
+        }
+        
+        return $dimension_summaries;
+    }
+    
+    /**
+     * Debug method to test database connection and table existence
+     */
+    public function debug_db()
+    {
+        $this->output->set_content_type('application/json');
+        
+        $debug_info = [];
+        
+        try {
+            // Check database connection
+            $debug_info['db_connected'] = $this->db->conn_id ? true : false;
+            
+            // Check if tables exist
+            $debug_info['rmi_point_progress_exists'] = $this->db->table_exists('rmi_point_progress');
+            $debug_info['rmi_parameters_exists'] = $this->db->table_exists('rmi_parameters');
+            
+            // Try to create tables
+            $this->ensure_rmi_tables_exist();
+            $debug_info['tables_created'] = 'attempted';
+            
+            // Check again after creation attempt
+            $debug_info['rmi_point_progress_exists_after'] = $this->db->table_exists('rmi_point_progress');
+            $debug_info['rmi_parameters_exists_after'] = $this->db->table_exists('rmi_parameters');
+            
+            // Get database error info
+            $debug_info['db_error'] = $this->db->error();
+            
+            // Test simple insert
+            $test_data = [
+                'parameter_key' => 'test_key_' . time(),
+                'phase_level' => 1,
+                'point_identifier' => 'test_point',
+                'point_text' => 'Test point',
+                'is_completed' => 0,
+                'completed_by' => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ];
+            
+            $insert_result = $this->db->insert('rmi_point_progress', $test_data);
+            $debug_info['test_insert'] = $insert_result;
+            $debug_info['insert_error'] = $this->db->error();
+            
+            if ($insert_result) {
+                // Clean up test data
+                $this->db->where('parameter_key', $test_data['parameter_key']);
+                $this->db->delete('rmi_point_progress');
+            }
+            
+            $debug_info['status'] = 'success';
+            
+        } catch (Exception $e) {
+            $debug_info['status'] = 'error';
+            $debug_info['error_message'] = $e->getMessage();
+            $debug_info['error_file'] = $e->getFile();
+            $debug_info['error_line'] = $e->getLine();
+        }
+        
+        $this->output->set_output(json_encode($debug_info, JSON_PRETTY_PRINT));
     }
 }
 

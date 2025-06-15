@@ -1,7 +1,7 @@
-<!-- Load RMI specific styles and scripts -->
-<link href="<?= base_url('assets/css/rmi_style.css'); ?>" rel="stylesheet">
-
 <script type="text/javascript">
+  // Define base_url for JavaScript use
+  var base_url = "<?= base_url(); ?>";
+  
   $(document).ready(function() {
     // Load RMI specific JavaScript
     $.getScript("<?= base_url('assets/js/rmi_script.js'); ?>");
